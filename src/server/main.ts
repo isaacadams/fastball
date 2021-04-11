@@ -1,4 +1,4 @@
-import { ids } from '../shared/coin.ids';
+import { getId } from '../shared/coin.ids';
 import * as http from 'https';
 
 function get(url) {
@@ -14,8 +14,11 @@ function get(url) {
 }
 
 const domain = 'https://api.coingecko.com/api/v3/';
-const checkPrice = `${domain}simple/price?ids=${ids.BITCOIN}&vs_currencies=usd`;
+const checkPrice = `${domain}simple/price?ids=${getId(
+  'BITCOIN'
+)}&vs_currencies=usd`;
 
 const getCoins = `${domain}coins/list`;
 
 get(checkPrice);
+//get(getCoins);
