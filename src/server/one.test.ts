@@ -11,7 +11,10 @@ async function test() {
 
 async function testingGetBlocks() {
   let n = await client.getCurrentBlockNumber();
-  let blocks = await client.getBlocks(n - 10, n);
+  let blocks = await client.getBlocks(n - 10, n, {
+    fullTx: true,
+    withSigners: false,
+  });
 
   console.log(blocks.reverse());
 }
