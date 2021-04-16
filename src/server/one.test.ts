@@ -1,6 +1,5 @@
 import { ONE } from '../../wallets';
 import { getTransactionHistory } from './TransactionHistory';
-import { getBlocks } from './client.harmony';
 import client from './one';
 
 async function test() {
@@ -13,7 +12,8 @@ async function test() {
 async function testingGetBlocks() {
   let n = await client.getCurrentBlockNumber();
   let blocks = await client.getBlocks(n - 10, n);
-  console.log(blocks);
+
+  console.log(blocks.reverse());
 }
 
 //test();

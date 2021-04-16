@@ -31,28 +31,29 @@ export async function getTransactionHistory(
   address: string,
   client: IBlockchainClient
 ): Promise<ITransaction[]> {
+  let transactionHistory = [];
   let currentBlock = await client.getCurrentBlockNumber();
   let transactionCount = await client.getTransactionCount(address);
   let balance = await client.getBalance(address, currentBlock);
-  let transactionHistory = [];
 
+  let numOfBlocksToProcessAtATime = 100000;
+  let begin = currentBlock;
   let runnerState = {
-    block: currentBlock,
+    block: begin,
     transactionCount,
     balance,
   };
   let printer = new XPrinter();
-  let numOfBlocksToProcessAtATime = 100000;
+
   for (
-    var i = currentBlock;
+    var i = begin;
     i >= 0 && (transactionCount > 0 || balance > 0);
-    i - numOfBlocksToProcessAtATime
+    i -= numOfBlocksToProcessAtATime
   ) {
     try {
-      //var block = await client.getBlock(i); //, true);
       //var blocks = await getProcessNBlocks(i, numOfBlocksToProcessAtATime);
       var blocks = await client.getBlocks(i - numOfBlocksToProcessAtATime, i);
-      blocks.forEach((block) => {
+      blocks.reverse().forEach((block) => {
         if (typeof block.number === 'string') {
           runnerState.block = Number(hexToNumber(block.number));
         } else {
@@ -104,28 +105,3 @@ export async function getTransactionHistory(
     );
   }
 }
-
-/* var myAddr = '0xbb9bc244d798123fde783fcc1c72d3bb8c189413';
-var currentBlock = eth.blockNumber;
-var n = eth.getTransactionCount(myAddr, currentBlock);
-var bal = eth.getBalance(myAddr, currentBlock);
-for (var i = currentBlock; i >= 0 && (n > 0 || bal > 0); --i) {
-  try {
-    var block = eth.getBlock(i, true);
-    if (block && block.transactions) {
-      block.transactions.forEach(function (e) {
-        if (myAddr == e.from) {
-          if (e.from != e.to) bal = bal.plus(e.value);
-          console.log(i, e.from, e.to, e.value.toString(10));
-          --n;
-        }
-        if (myAddr == e.to) {
-          if (e.from != e.to) bal = bal.minus(e.value);
-          console.log(i, e.from, e.to, e.value.toString(10));
-        }
-      });
-    }
-  } catch (e) {
-    console.error('Error in block ' + i, e);
-  }
-} */
