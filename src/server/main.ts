@@ -1,5 +1,6 @@
 import { getId } from '../shared/coin.ids';
 import * as http from 'https';
+import './eth';
 
 function get(url) {
   http

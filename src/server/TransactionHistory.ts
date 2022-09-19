@@ -52,7 +52,10 @@ export async function getTransactionHistory(
   ) {
     try {
       //var blocks = await getProcessNBlocks(i, numOfBlocksToProcessAtATime);
-      var blocks = await client.getBlocks(i - numOfBlocksToProcessAtATime, i);
+      var blocks = await client.getBlocks(i - numOfBlocksToProcessAtATime, i, {
+        fullTx: true,
+        withSigners: false,
+      });
       blocks.reverse().forEach((block) => {
         if (typeof block.number === 'string') {
           runnerState.block = Number(hexToNumber(block.number));
